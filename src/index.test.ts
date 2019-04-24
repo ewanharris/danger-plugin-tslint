@@ -28,7 +28,7 @@ describe('tslint', () => {
 			git: { created_files: [], modified_files: [] },
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).not.toHaveBeenCalled();
 		expect(global.warn).not.toHaveBeenCalled();
@@ -43,7 +43,7 @@ describe('tslint', () => {
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).not.toHaveBeenCalled();
 		expect(global.warn).not.toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe('tslint', () => {
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).not.toHaveBeenCalled();
 		expect(global.warn).not.toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('tslint', () => {
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).toHaveBeenCalledTimes(2);
 		expect(global.fail).toHaveBeenNthCalledWith(1, '\" should be \' line - test.ts (quotemark)', 'test.ts', 1);
@@ -96,7 +96,7 @@ describe('tslint', () => {
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).not.toHaveBeenCalled();
 		expect(global.warn).toHaveBeenCalledTimes(2);
@@ -123,7 +123,7 @@ describe('tslint', () => {
 			}
 		};
 
-		await tslint({ configurationPath: DEFAULT_CONFIG });
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
 
 		expect(global.fail).not.toHaveBeenCalled();
 		expect(global.warn).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('tslint', () => {
 			}
 		};
 
-		await tslint({ configurationPath: CONFIG_WITH_JS });
+		await tslint({ tslintConfigurationPath: CONFIG_WITH_JS });
 
 		expect(global.fail).toHaveBeenCalledTimes(2);
 		expect(global.fail).toHaveBeenNthCalledWith(1, '\" should be \' line - test.js (quotemark)', filePath, 1);

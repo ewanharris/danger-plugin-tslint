@@ -9,11 +9,12 @@ import * as path from 'path';
 import { Configuration, Linter } from 'tslint';
 import {  IConfigurationFile } from 'tslint/lib/configuration';
 
+const defaultConfigPath = path.join(process.cwd(), 'tslint.json');
 export interface DangerTSLintOptions {
-	configurationPath: string
+	tslintConfigurationPath?: string
 }
 
-export default function tslint(options: DangerTSLintOptions) {
+export default function tslint(options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath}) {
 	const files = danger.git.created_files.concat(danger.git.modified_files);
 
 	const tslintOptions = {
