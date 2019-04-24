@@ -7,7 +7,7 @@ const CONFIG_WITH_JS = path.join(__dirname, 'fixtures', 'tslint-with-js.json');
 
 const mockFileContents = (contents: string) => {
 	const asyncContents: Promise<string> = new Promise((resolve, reject) => resolve(contents));
-	return async (filePath: string): Promise<string> => asyncContents;
+	return async (filePath: string): Promise<string> => asyncContents
 };
 
 describe('tslint', () => {

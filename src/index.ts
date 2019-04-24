@@ -10,7 +10,7 @@ import { Configuration, Linter } from 'tslint';
 import {  IConfigurationFile } from 'tslint/lib/configuration';
 
 export interface DangerTSLintOptions {
-	configurationPath: string;
+	configurationPath: string
 }
 
 export default function tslint(options: DangerTSLintOptions) {
