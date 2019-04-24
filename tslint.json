@@ -34,7 +34,8 @@
     "linterOptions": {
         "exclude": [
             "*.js",
-            "*.json"
+            "**/*.json",
+            ".vscode/*.json"
         ]
     }
 }
