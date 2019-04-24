@@ -1,0 +1,11 @@
+{
+	"defaultServerity": "error",
+	"rules": {
+		"semicolon": {
+			"options": [ true, "always" ],
+			"severity": "warn"
+		},
+		"quotemark": [ true, "single" ]
+	},
+	"jsRules": true
+}

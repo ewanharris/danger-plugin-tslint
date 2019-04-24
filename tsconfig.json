@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "rootDir": "src",
+        "outDir": "dist",
+        "allowJs": false,
+        "pretty": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node"
+    },
+    "lib":["es2017"],
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

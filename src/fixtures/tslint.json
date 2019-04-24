@@ -1,0 +1,15 @@
+{
+	"defaultServerity": "error",
+	"rules": {
+		"semicolon": {
+			"options": [ true, "always" ],
+			"severity": "warn"
+		},
+		"quotemark": [ true, "single" ]
+	},
+	"linterOptions": {
+		"exclude": [
+			"*.js"
+		]
+	}
+}

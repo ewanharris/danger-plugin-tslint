@@ -1,0 +1,53 @@
+{
+  "name": "@awam/danger-plugin-tslint",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "lint": "tslint -p tsconfig.json --format stylish",
+    "prepare": "npm run compile",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "peerDependencies": {
+    "tslint": "*"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "transform": {
+      ".(ts|tsx|js|json)": "ts-jest"
+    },
+    "testRegex": "(.test)\\.(ts|tsx)$",
+    "testPathIgnorePatterns": [
+      "\\.snap$",
+      "<rootDir>/node_modules/"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "clover",
+      "html"
+    ]
+  },
+  "dependencies": {
+    "@types/node": "^11.13.7",
+    "danger": "^7.1.3"
+  }
+}
