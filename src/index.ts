@@ -22,7 +22,13 @@ export default function tslint(options: DangerTSLintOptions = { tslintConfigurat
 		formatter: 'json'
 	};
 	const linter = new Linter(tslintOptions);
-	const configuration: IConfigurationFile = Configuration.loadConfigurationFromPath(options.configurationPath);
+	let configuration: IConfigurationFile;
+	try {
+		configuration = Configuration.loadConfigurationFromPath(options.tslintConfigurationPath);
+	} catch (error) {
+		fail(`Invalid tslint configuration file ${options.tslintConfigurationPath}`, error.message);
+		return;
+	}
 	const lintFiles = files.filter(file => !Configuration.isFileExcluded(file, configuration));
 	return Promise.all(lintFiles.map(file => lintFile(linter, configuration, file)));
 }
