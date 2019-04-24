@@ -149,7 +149,7 @@ describe('tslint', () => {
 			}
 		};
 
-		await tslint({ tslintConfigurationPath: CONFIG_WITH_JS });
+		await tslint({ tslintConfigurationPath: CONFIG_WITH_JS, fileExtensions: [ '.js', '.ts' ] });
 
 		expect(global.fail).toHaveBeenCalledTimes(2);
 		expect(global.fail).toHaveBeenNthCalledWith(1, '\" should be \' line - test.js (quotemark)', filePath, 1);
