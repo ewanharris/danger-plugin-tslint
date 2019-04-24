@@ -11,12 +11,13 @@ import {  IConfigurationFile } from 'tslint/lib/configuration';
 
 const defaultConfigPath = path.join(process.cwd(), 'tslint.json');
 export interface DangerTSLintOptions {
-	tslintConfigurationPath?: string
+	tslintConfigurationPath?: string;
+	fileExtensions?: string[];
 }
 
-export default function tslint(options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath}) {
+export default function tslint(options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath }) {
 	const files = danger.git.created_files.concat(danger.git.modified_files);
-
+	const supportedFileExtension = options.fileExtensions || [ '.ts' ];
 	const tslintOptions = {
 		fix: false,
 		formatter: 'json'
@@ -29,7 +30,7 @@ export default function tslint(options: DangerTSLintOptions = { tslintConfigurat
 		fail(`Invalid tslint configuration file ${options.tslintConfigurationPath}`, error.message);
 		return;
 	}
-	const lintFiles = files.filter(file => !Configuration.isFileExcluded(file, configuration));
+	const lintFiles = files.filter(file => !Configuration.isFileExcluded(file, configuration) && supportedFileExtension.includes(path.extname(file)));
 	return Promise.all(lintFiles.map(file => lintFile(linter, configuration, file)));
 }
 
