@@ -15,4 +15,4 @@ cache:
     - "~/.npm"
 
 before_script:
-  - yarn danger ci
+  - npx danger ci
