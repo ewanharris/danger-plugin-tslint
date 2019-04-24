@@ -5,7 +5,7 @@ const tslint = require('.').default;
 const path = require('path');
 async function main() {
 	await Promise.all([
-		tslint({ configurationPath: path.join(__dirname, 'tslint.json' )})
+		tslint()
 	]);
 }
 main()
