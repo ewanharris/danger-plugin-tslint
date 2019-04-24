@@ -19,3 +19,4 @@ jobs:
     - stage: danger
       node_js: "10"
       script: npx danger ci
+      if: type = pull_request
