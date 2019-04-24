@@ -7,7 +7,8 @@
     "compile": "tsc -p ./",
     "lint": "tslint -p tsconfig.json --format stylish",
     "prepare": "npm run compile",
-    "test": "jest"
+    "test": "jest",
+    "watch": "tsc -watch -p ./"
   },
   "keywords": [],
   "author": "",

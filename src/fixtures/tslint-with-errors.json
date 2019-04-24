@@ -1,0 +1,11 @@
+{
+	"extends": ["foo"],
+	"rules": {
+		"semicolon": {
+			"options": [ true, "always" ],
+			"severity": "warn"
+		},
+		"quotemark": [ true, "single" ]
+	},
+	"jsRules": true
+}

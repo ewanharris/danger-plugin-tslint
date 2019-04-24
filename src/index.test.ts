@@ -3,7 +3,7 @@ import * as path from 'path';
 
 const DEFAULT_CONFIG = path.join(__dirname, 'fixtures', 'tslint.json');
 const CONFIG_WITH_JS = path.join(__dirname, 'fixtures', 'tslint-with-js.json');
-
+const CONFIG_WITH_ERROR = path.join(__dirname, 'fixtures', 'tslint-with-errors.json');
 
 const mockFileContents = (contents: string) => {
 	const asyncContents: Promise<string> = new Promise((resolve, reject) => resolve(contents));
@@ -157,5 +157,24 @@ describe('tslint', () => {
 		expect(global.warn).toHaveBeenCalledTimes(2);
 		expect(global.warn).toHaveBeenNthCalledWith(1, 'Missing semicolon line - test.js (semicolon)', filePath, 1);
 		expect(global.warn).toHaveBeenNthCalledWith(2, 'Missing semicolon line - test.js (semicolon)', filePath, 2);
-	})
+	});
+
+	it('should handle an invalid tslint file', async () => {
+		global.danger = {
+			github: {
+				pr: { title: 'Test' },
+				utils: { fileContents: mockFileContents(`
+					const foo: string = 'foo'
+					const bar: string = 'bar'
+				`) }
+			},
+			git: { created_files: ['test.ts'], modified_files: [] }
+		};
+
+		await tslint({ tslintConfigurationPath: CONFIG_WITH_ERROR });
+
+		expect(global.fail).toHaveBeenCalledTimes(1);
+		expect(global.fail).toHaveBeenLastCalledWith(`Invalid tslint configuration file ${CONFIG_WITH_ERROR}`, 'Invalid \"extends\" configuration value - could not require \"foo\". Review the Node lookup algorithm (https://nodejs.org/api/modules.html#modules_all_together) for the approximate method TSLint uses to find the referenced configuration file.');
+		expect(global.warn).not.toHaveBeenCalled()
+	});
 });
