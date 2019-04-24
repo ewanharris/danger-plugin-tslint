@@ -15,7 +15,7 @@ export interface DangerTSLintOptions {
 	fileExtensions?: string[];
 }
 
-export default function tslint(options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath }) {
+export default function tslint (options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath }) {
 	const files = danger.git.created_files.concat(danger.git.modified_files);
 	const supportedFileExtension = options.fileExtensions || [ '.ts' ];
 	const tslintOptions = {

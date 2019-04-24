@@ -1,5 +1,5 @@
-import tslint from './index';
 import * as path from 'path';
+import tslint from './index';
 
 const DEFAULT_CONFIG = path.join(__dirname, 'fixtures', 'tslint.json');
 const CONFIG_WITH_JS = path.join(__dirname, 'fixtures', 'tslint-with-js.json');
@@ -7,7 +7,7 @@ const CONFIG_WITH_ERROR = path.join(__dirname, 'fixtures', 'tslint-with-errors.j
 
 const mockFileContents = (contents: string) => {
 	const asyncContents: Promise<string> = new Promise((resolve, reject) => resolve(contents));
-	return async (filePath: string): Promise<string> => asyncContents
+	return async (filePath: string): Promise<string> => asyncContents;
 };
 
 describe('tslint', () => {
@@ -175,6 +175,6 @@ describe('tslint', () => {
 
 		expect(global.fail).toHaveBeenCalledTimes(1);
 		expect(global.fail).toHaveBeenLastCalledWith(`Invalid tslint configuration file ${CONFIG_WITH_ERROR}`, 'Invalid \"extends\" configuration value - could not require \"foo\". Review the Node lookup algorithm (https://nodejs.org/api/modules.html#modules_all_together) for the approximate method TSLint uses to find the referenced configuration file.');
-		expect(global.warn).not.toHaveBeenCalled()
+		expect(global.warn).not.toHaveBeenCalled();
 	});
 });
