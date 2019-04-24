@@ -14,5 +14,8 @@ cache:
   directories:
     - "~/.npm"
 
-before_script:
-  - npx danger ci
+jobs:
+  include:
+    - stage: danger
+      node_js: "10"
+      script: npx danger ci
