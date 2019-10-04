@@ -18,11 +18,6 @@ export interface DangerTSLintOptions {
 export default function tslint (options: DangerTSLintOptions = { tslintConfigurationPath: defaultConfigPath }) {
 	const files = danger.git.created_files.concat(danger.git.modified_files);
 	const supportedFileExtension = options.fileExtensions || [ '.ts' ];
-	const tslintOptions = {
-		fix: false,
-		formatter: 'json'
-	};
-	const linter = new Linter(tslintOptions);
 	let configuration: IConfigurationFile;
 	try {
 		configuration = Configuration.loadConfigurationFromPath(options.tslintConfigurationPath);
@@ -31,11 +26,15 @@ export default function tslint (options: DangerTSLintOptions = { tslintConfigura
 		return;
 	}
 	const lintFiles = files.filter(file => !Configuration.isFileExcluded(file, configuration) && supportedFileExtension.includes(path.extname(file)));
-	return Promise.all(lintFiles.map(file => lintFile(linter, configuration, file)));
+	return Promise.all(lintFiles.map(file => lintFile(configuration, file)));
 }
 
-async function lintFile (linter: Linter, config: IConfigurationFile, filePath: string) {
+async function lintFile (config: IConfigurationFile, filePath: string) {
 	const fileContents = await danger.github.utils.fileContents(filePath);
+	const linter = new Linter({
+		fix: false,
+		formatter: 'json'
+	});
 	linter.lint(filePath, fileContents, config);
 	const results = linter.getResult();
 
@@ -48,7 +47,6 @@ async function lintFile (linter: Linter, config: IConfigurationFile, filePath: s
 			if (failure.getRuleSeverity() === 'warning') {
 				warn(message, filePath, line);
 			}
-
 			if (failure.getRuleSeverity() === 'error') {
 				fail(message, filePath, line);
 			}

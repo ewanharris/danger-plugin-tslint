@@ -5,9 +5,14 @@ const DEFAULT_CONFIG = path.join(__dirname, 'fixtures', 'tslint.json');
 const CONFIG_WITH_JS = path.join(__dirname, 'fixtures', 'tslint-with-js.json');
 const CONFIG_WITH_ERROR = path.join(__dirname, 'fixtures', 'tslint-with-errors.json');
 
-const mockFileContents = (contents: string) => {
-	const asyncContents: Promise<string> = new Promise((resolve, reject) => resolve(contents));
-	return async (filePath: string): Promise<string> => asyncContents;
+interface MockContents {
+	[key: string]: string;
+}
+
+const mockFileContents = (contents: MockContents) => {
+	return async (filePath: string): Promise<string> => {
+		return await contents[filePath];
+	};
 };
 
 describe('tslint', () => {
@@ -38,7 +43,11 @@ describe('tslint', () => {
 		global.danger = {
 			github: {
 				pr: { title: 'Test' },
-				utils: { fileContents: mockFileContents(`const answerToTheUltimateQuestionOfLifeTheUniverseAndEverything: number = 42;`) }
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `const answerToTheUltimateQuestionOfLifeTheUniverseAndEverything: number = 42;`
+					})
+				}
 			},
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
@@ -53,7 +62,11 @@ describe('tslint', () => {
 		global.danger = {
 			github: {
 				pr: { title: 'Test' },
-				utils: { fileContents: mockFileContents(`const answerToTheUltimateQuestionOfLifeTheUniverseAndEverything: number = 42;`) }
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `const answerToTheUltimateQuestionOfLifeTheUniverseAndEverything: number = 42;`
+					})
+				}
 			},
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
@@ -68,10 +81,13 @@ describe('tslint', () => {
 		global.danger = {
 			github: {
 				pr: { title: 'Test' },
-				utils: { fileContents: mockFileContents(`
-					const foo: string = "foo";
-					const bar: string = "bar";
-				`) }
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `
+						const foo: string = "foo";
+						const bar: string = "bar";`
+					})
+				}
 			},
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
@@ -88,10 +104,13 @@ describe('tslint', () => {
 		global.danger = {
 			github: {
 				pr: { title: 'Test' },
-				utils: { fileContents: mockFileContents(`
-					const foo: string = 'foo'
-					const bar: string = 'bar'
-				`) }
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `
+						const foo: string = 'foo'
+						const bar: string = 'bar'`
+					})
+				}
 			},
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
@@ -111,10 +130,11 @@ describe('tslint', () => {
 					title: 'Test'
 				},
 				utils: {
-					fileContents: mockFileContents(`
+					fileContents: mockFileContents({
+						'test.ts': `
 						const foo = 'foo'
-						const bar = 'bar'
-					`)
+						const bar = 'bar'`
+					})
 				}
 			},
 			git: {
@@ -137,10 +157,10 @@ describe('tslint', () => {
 					title: 'Test'
 				},
 				utils: {
-					fileContents: mockFileContents(`
+					fileContents: mockFileContents({
+						[filePath]: `
 						const foo = "foo"
-						const bar = "bar"
-					`)
+						const bar = "bar"`})
 				}
 			},
 			git: {
@@ -163,10 +183,13 @@ describe('tslint', () => {
 		global.danger = {
 			github: {
 				pr: { title: 'Test' },
-				utils: { fileContents: mockFileContents(`
-					const foo: string = 'foo'
-					const bar: string = 'bar'
-				`) }
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `
+						const foo: string = 'foo'
+						const bar: string = 'bar'`
+					})
+				}
 			},
 			git: { created_files: ['test.ts'], modified_files: [] }
 		};
@@ -177,4 +200,35 @@ describe('tslint', () => {
 		expect(global.fail).toHaveBeenLastCalledWith(`Invalid tslint configuration file ${CONFIG_WITH_ERROR}`, 'Invalid \"extends\" configuration value - could not require \"foo\". Review the Node lookup algorithm (https://nodejs.org/api/modules.html#modules_all_together) for the approximate method TSLint uses to find the referenced configuration file.');
 		expect(global.warn).not.toHaveBeenCalled();
 	});
+
+	it('should handle multiple files', async () => {
+		global.danger = {
+			github: {
+				pr: { title: 'Test' },
+				utils: {
+					fileContents: mockFileContents({
+						'test.ts': `
+						const foo: string = "foo";
+						const bar: string = "bar";`,
+
+						'test2.ts': `
+						const foo: string = 'foo'
+						const bar: string = 'bar'`
+					})
+				}
+			},
+			git: { created_files: ['test.ts', 'test2.ts'], modified_files: [] }
+		};
+
+		await tslint({ tslintConfigurationPath: DEFAULT_CONFIG });
+
+		expect(global.fail).toHaveBeenCalledTimes(2);
+		expect(global.fail).toHaveBeenNthCalledWith(1, '\" should be \' line - test.ts (quotemark)', 'test.ts', 1);
+		expect(global.fail).toHaveBeenNthCalledWith(2, '\" should be \' line - test.ts (quotemark)', 'test.ts', 2);
+
+		expect(global.warn).toHaveBeenCalledTimes(2);
+		expect(global.warn).toHaveBeenNthCalledWith(1, 'Missing semicolon line - test2.ts (semicolon)', 'test2.ts', 1);
+		expect(global.warn).toHaveBeenNthCalledWith(2, 'Missing semicolon line - test2.ts (semicolon)', 'test2.ts', 2);
+	});
+
 });
