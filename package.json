@@ -55,6 +55,6 @@
   },
   "dependencies": {
     "@types/node": "^11.13.22",
-    "danger": "^7.1.4"
+    "danger": "^11.2.1"
   }
 }
